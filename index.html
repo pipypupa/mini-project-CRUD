@@ -1,0 +1,51 @@
+<!DOCTYPE html><html lang=en><meta charset=UTF-8><meta name=viewport content="width=device-width, initial-scale=1.0"><title>Your blogs</title><link rel=stylesheet href=/mini-project-crud/mini-project-CRUD.ca99ce18.css><link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel=stylesheet><body>
+    <h1>Add your post in my blog</h1>
+    <form class=search-form id=search-form>
+      <input id=search-input name=query autocomplete=off placeholder="Search posts">
+    </form>
+    <button class=add>Add post</button>
+    <ul class=posts></ul>
+    <div class="hidden modal-backdrop">
+      <div class=modal>
+        <h2>Create new post</h2>
+        <form id=new-post-form>
+          <input placeholder=Username name=Username required>
+          <input type=url placeholder="Image URL" name=url required>
+          <button id=create-post class=add-button>
+            Create
+          </button>
+          <button type=button class=close-modal>Cancel</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="hidden modal-backdropEdit">
+      <div class=modalEdit>
+        <h2>Update a post</h2>
+        <form id=edit-post-form>
+          <input id=username placeholder=Username name=Username required>
+          <input id=url type=url placeholder="Image URL" name=url required>
+          <button id=update-post class=edit-button>
+            Edit
+          </button>
+          <button type=button class=close-modalEdit>Cancel</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="hidden modal-backdropCommments">
+      <div class=modalComments>
+        <h2>Comments</h2>
+        <ul class=comments></ul>
+        <form id=comments-post-form>
+          <input id=info placeholder=text name=info required>
+          <button type=button class=post-comment-button>
+            Add your comment
+          </button>
+          <button type=button class=close-comment-button>Close</button>
+        </form>
+      </div>
+    </div>
+    <script type=module src=/mini-project-crud/mini-project-CRUD.4cb3fffc.js></script>
+  
+
