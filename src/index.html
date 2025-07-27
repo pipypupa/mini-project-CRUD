@@ -18,7 +18,7 @@
         type="text"
         name="query"
         autocomplete="off"
-        placeholder="Search posts"
+        placeholder="Знайдіть пост по нікнейму"
       />
     </form>
     <button class="add">Add post</button>
@@ -37,6 +37,7 @@
       </div>
     </div>
 
+    <!-- фрагмент для модалки редагування -->
     <div class="modal-backdropEdit hidden">
       <div class="modalEdit">
         <h2>Update a post</h2>
@@ -49,7 +50,7 @@
             required
           />
           <input
-            id="url"
+            id="edit-url"
             type="url"
             placeholder="Image URL"
             name="url"
@@ -75,7 +76,7 @@
             name="info"
             required
           />
-          <button type="button" class="post-comment-button">
+          <button type="submit" class="post-comment-button">
             Add your comment
           </button>
           <button type="button" class="close-comment-button">Close</button>

@@ -1,7 +1,7 @@
 export default async function deletePost(id) {
   try {
     return await fetch(
-      `hhttp://localhost:3000/bd`,
+      `https://6884da50745306380a399f75.mockapi.io/posts/${id}`,
       {
         method: "DELETE",
       }

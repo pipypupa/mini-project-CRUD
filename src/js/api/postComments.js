@@ -5,7 +5,7 @@ export default async function postComment(
 ) {
   try {
     return await fetch(
-      `http://localhost:3000/bd`,
+      `https://6884da50745306380a399f75.mockapi.io/posts/${id}`,
       {
         method: "PUT",
         headers: {

@@ -1,6 +1,6 @@
 export default async function updateLikes(likes, id) {
   try {
-    return await fetch(`http://localhost:3000/bd`, {
+    return await fetch(`https://6884da50745306380a399f75.mockapi.io/posts/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

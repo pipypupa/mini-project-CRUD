@@ -1,9 +1,16 @@
 export default async function getPosts() {
   try {
-    return await fetch(
-      "http://localhost:3000/bd"
-    ).then((res) => res.json());
+    const response = await fetch(
+      "https://6884da50745306380a399f75.mockapi.io/posts/"
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return await response.json();
   } catch (error) {
-    console.log(error);
+    console.error("Помилка при отриманні постів:", error);
+    return [];
   }
 }
