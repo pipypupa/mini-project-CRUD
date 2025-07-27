@@ -689,16 +689,23 @@ let commentPostId = null;
 let postId = null;
 async function refreshPosts() {
     const data = await (0, _getJsDefault.default)();
+    // Нормалізуємо commentList — має бути масив
+    data.forEach((post)=>{
+        if (!Array.isArray(post.commentList)) post.commentList = [];
+    });
     document.querySelector(".posts").innerHTML = (0, _renderJsDefault.default)(data);
     postsList = data;
 }
 refreshPosts();
+// Відкриття модалки створення посту
 document.querySelector(".add").addEventListener("click", ()=>{
     document.querySelector(".modal-backdrop").classList.remove("hidden");
 });
+// Закриття модалки створення посту
 document.querySelector(".close-modal").addEventListener("click", ()=>{
     document.querySelector(".modal-backdrop").classList.add("hidden");
 });
+// Створення нового посту
 document.querySelector("#new-post-form").addEventListener("submit", async (e)=>{
     e.preventDefault();
     const imageUrl = e.target.elements.url.value;
@@ -715,12 +722,15 @@ document.querySelector("#new-post-form").addEventListener("submit", async (e)=>{
     document.querySelector(".modal-backdrop").classList.add("hidden");
     e.target.reset();
 });
+// Закриття модалки коментарів
 document.querySelector(".close-comment-button").addEventListener("click", ()=>{
     document.querySelector(".modal-backdropCommments").classList.add("hidden");
 });
+// Закриття модалки редагування
 document.querySelector(".close-modalEdit").addEventListener("click", ()=>{
     document.querySelector(".modal-backdropEdit").classList.add("hidden");
 });
+// Обробник кліків на постах
 document.querySelector(".posts").addEventListener("click", (e)=>{
     const postCard = e.target.closest(".post-card");
     if (!postCard) return;
@@ -739,20 +749,23 @@ document.querySelector(".posts").addEventListener("click", (e)=>{
         commentPostId = id;
         document.querySelector(".modal-backdropCommments").classList.remove("hidden");
         const post = postsList.find((post)=>post.id === commentPostId);
-        document.querySelector(".comments").innerHTML = (0, _renderCommentsJsDefault.default)(post.commentList);
+        const commentList = Array.isArray(post.commentList) ? post.commentList : [];
+        document.querySelector(".comments").innerHTML = (0, _renderCommentsJsDefault.default)(commentList);
     }
     if (e.target.closest(".delete")) (0, _deleteJsDefault.default)(id).then(()=>refreshPosts());
     if (e.target.closest(".edit")) {
         postId = id;
         document.querySelector("#username").value = postCard.querySelector(".user").textContent;
-        document.querySelector("#url").value = postCard.querySelector(".photo-post").src;
+        document.querySelector("#edit-url").value = postCard.querySelector(".photo-post").src;
         document.querySelector(".modal-backdropEdit").classList.remove("hidden");
     }
 });
-document.querySelector(".edit-button").addEventListener("click", async ()=>{
+// Збереження редагування посту
+document.querySelector(".edit-button").addEventListener("click", async (e)=>{
+    e.preventDefault();
     const updatedPost = {
         userName: document.querySelector("#username").value,
-        imageUrl: document.querySelector("#url").value
+        imageUrl: document.querySelector("#edit-url").value
     };
     try {
         await (0, _editJsDefault.default)(updatedPost, postId);
@@ -762,6 +775,7 @@ document.querySelector(".edit-button").addEventListener("click", async ()=>{
         console.error("Error updating post:", error);
     }
 });
+// Пошук по ніку
 document.querySelector('#search-form input[name="query"]').addEventListener("input", (e)=>{
     const searchTerm = e.target.value.toLowerCase();
     document.querySelectorAll(".post-card").forEach((card)=>{
@@ -769,12 +783,17 @@ document.querySelector('#search-form input[name="query"]').addEventListener("inp
         card.style.display = userName.includes(searchTerm) ? "block" : "none";
     });
 });
-document.querySelector(".post-comment-button").addEventListener("click", async ()=>{
+// Додати коментар
+document.querySelector("#comments-post-form").addEventListener("submit", async (e)=>{
+    e.preventDefault();
     const comment = document.querySelector("#info").value.trim();
     if (!comment) return;
     const post = postsList.find((post)=>post.id === commentPostId);
-    const updatedList = [
+    if (!post) return;
+    const updatedList = Array.isArray(post.commentList) ? [
         ...post.commentList,
+        comment
+    ] : [
         comment
     ];
     const comments = updatedList.length;
@@ -783,11 +802,13 @@ document.querySelector(".post-comment-button").addEventListener("click", async (
     document.querySelector(".modal-backdropCommments").classList.add("hidden");
     document.querySelector("#info").value = "";
 });
+// Видалити коментар
 document.querySelector(".comments").addEventListener("click", (e)=>{
     if (e.target.closest(".delete-comment")) {
         const commentCard = e.target.closest("li.comment-card");
         const commentToDelete = commentCard.querySelector(".comment-info").textContent.trim();
         const post = postsList.find((post)=>post.id === commentPostId);
+        if (!post) return;
         const updatedList = post.commentList.filter((comment)=>comment !== commentToDelete);
         const comments = updatedList.length;
         (0, _postCommentsJsDefault.default)(updatedList, commentPostId, comments).then(()=>refreshPosts());
@@ -795,7 +816,7 @@ document.querySelector(".comments").addEventListener("click", (e)=>{
     }
 });
 
-},{"./render/render.js":"3en4C","./render/renderComments.js":"abx1d","./api/postComments.js":"e4Zuq","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT","./api/get.js":"eGSFA","./api/post.js":"3SQvt","./api/edit.js":"1ZaDK","./api/delete.js":"aOAXi","./api/updateLikes.js":"khHM5"}],"3en4C":[function(require,module,exports,__globalThis) {
+},{"./render/render.js":"3en4C","./api/get.js":"eGSFA","./api/post.js":"3SQvt","./api/edit.js":"1ZaDK","./api/delete.js":"aOAXi","./api/updateLikes.js":"khHM5","./render/renderComments.js":"abx1d","./api/postComments.js":"e4Zuq","@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"3en4C":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>render);
@@ -854,7 +875,95 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"abx1d":[function(require,module,exports,__globalThis) {
+},{}],"eGSFA":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>getPosts);
+async function getPosts() {
+    try {
+        const response = await fetch("https://6884da50745306380a399f75.mockapi.io/posts/");
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        return await response.json();
+    } catch (error) {
+        console.error("\u041F\u043E\u043C\u0438\u043B\u043A\u0430 \u043F\u0440\u0438 \u043E\u0442\u0440\u0438\u043C\u0430\u043D\u043D\u0456 \u043F\u043E\u0441\u0442\u0456\u0432:", error);
+        return [];
+    }
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"3SQvt":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>addPost);
+async function addPost(post) {
+    try {
+        return await fetch("https://6884da50745306380a399f75.mockapi.io/posts/", {
+            method: "POST",
+            body: JSON.stringify(post),
+            headers: {
+                "Content-Type": "application/json; charset=UTF-8"
+            }
+        }).then((res)=>res.json());
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"1ZaDK":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>updatePost);
+async function updatePost(postData, id) {
+    try {
+        const res = await fetch(`https://6884da50745306380a399f75.mockapi.io/posts/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(postData)
+        });
+        if (!res.ok) throw new Error("Failed to update post");
+        return await res.json();
+    } catch (error) {
+        console.error("Failed to update post:", error);
+        throw error;
+    }
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"aOAXi":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>deletePost);
+async function deletePost(id) {
+    try {
+        return await fetch(`https://6884da50745306380a399f75.mockapi.io/posts/${id}`, {
+            method: "DELETE"
+        });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"khHM5":[function(require,module,exports,__globalThis) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "default", ()=>updateLikes);
+async function updateLikes(likes, id) {
+    try {
+        return await fetch(`https://6884da50745306380a399f75.mockapi.io/posts/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                likes: likes
+            })
+        }).then((res)=>res.json());
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"abx1d":[function(require,module,exports,__globalThis) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>renderComments);
@@ -877,7 +986,7 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "default", ()=>postComment);
 async function postComment(updatedComments, id, amountofComments) {
     try {
-        return await fetch(`https://6882a21521fa24876a9b6374.mockapi.io/posts/${id}`, {
+        return await fetch(`https://6884da50745306380a399f75.mockapi.io/posts/${id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
@@ -885,91 +994,6 @@ async function postComment(updatedComments, id, amountofComments) {
             body: JSON.stringify({
                 comments: amountofComments,
                 commentList: updatedComments
-            })
-        }).then((res)=>res.json());
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"eGSFA":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "default", ()=>getPosts);
-async function getPosts() {
-    try {
-        return await fetch("https://6882a21521fa24876a9b6374.mockapi.io/posts").then((res)=>res.json());
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"3SQvt":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "default", ()=>addPost);
-async function addPost(post) {
-    try {
-        return await fetch("https://6882a21521fa24876a9b6374.mockapi.io/posts", {
-            method: "POST",
-            body: JSON.stringify(post),
-            headers: {
-                "Content-Type": "application/json; charset=UTF-8"
-            }
-        }).then((res)=>res.json());
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"1ZaDK":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "default", ()=>updatePost);
-async function updatePost(postData, id) {
-    try {
-        const res = await fetch(`https://6882a21521fa24876a9b6374.mockapi.io/posts/${id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(postData)
-        });
-        if (!res.ok) throw new Error("Failed to update post");
-        return await res.json();
-    } catch (error) {
-        console.error("Failed to update post:", error);
-        throw error;
-    }
-}
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"aOAXi":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "default", ()=>deletePost);
-async function deletePost(id) {
-    try {
-        return await fetch(`https://6882a21521fa24876a9b6374.mockapi.io/posts/${id}`, {
-            method: "DELETE"
-        });
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"jnFvT"}],"khHM5":[function(require,module,exports,__globalThis) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "default", ()=>updateLikes);
-async function updateLikes(likes, id) {
-    try {
-        return await fetch(`https://6882a21521fa24876a9b6374.mockapi.io/posts/${id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                likes: likes
             })
         }).then((res)=>res.json());
     } catch (error) {
