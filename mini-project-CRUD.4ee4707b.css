@@ -1,0 +1,282 @@
+body {
+  text-align: center;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.posts {
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 25px;
+  padding: 0;
+  list-style: none;
+  display: flex;
+}
+
+.user {
+  color: #434040;
+  margin-bottom: 0;
+}
+
+.post-card {
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  width: 300px;
+  padding-bottom: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px #0000001a;
+}
+
+.post-card img {
+  width: 100%;
+  height: auto;
+  max-height: 200px;
+  display: block;
+}
+
+.stats {
+  justify-content: space-around;
+  margin-top: 0;
+  padding: 2px 0;
+  display: flex;
+}
+
+.stats-item {
+  color: #555;
+  align-items: center;
+  font-size: 14px;
+  display: flex;
+}
+
+.stats-item i {
+  color: #888;
+  margin-right: 5px;
+}
+
+.add {
+  color: #fff;
+  cursor: pointer;
+  background-color: pink;
+  border: none;
+  border-radius: 8px;
+  margin: 20px auto;
+  padding: 10px 20px;
+  font-size: 16px;
+  transition: background .3s;
+  display: block;
+}
+
+.add:hover {
+  background-color: green;
+}
+
+.post-card button, .delete-comment {
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  margin: 5px;
+  padding: 6px 12px;
+  font-size: 14px;
+  transition: background .3s;
+}
+
+.edit {
+  color: #fff;
+  background-color: green;
+}
+
+.edit:hover {
+  background-color: #2f942f;
+}
+
+.delete, .delete-comment {
+  color: #fff;
+  background-color: #e63946;
+}
+
+.delete:hover, .delete-comment:hover {
+  background-color: #b72c38;
+}
+
+.modal-backdrop, .modal-backdropEdit {
+  z-index: 1000;
+  background-color: #0009;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  position: fixed;
+  inset: 0;
+}
+
+.modal, .modalEdit {
+  text-align: left;
+  background-color: #fff;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px;
+  padding: 20px 30px;
+  box-shadow: 0 4px 15px #0000004d;
+}
+
+.modal h2, .modalEdit h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.modal form, .modalEdit form {
+  flex-direction: column;
+  gap: 10px;
+  display: flex;
+}
+
+.modal input, .modalEdit input {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 14px;
+}
+
+.modal button, .modalEdit button {
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 15px;
+}
+
+#create-post, #update-post {
+  color: #fff;
+  background-color: pink;
+}
+
+.modal .close-modal, .modalEdit .close-modalEdit {
+  color: #fff;
+  background-color: gray;
+}
+
+.search-form {
+  justify-content: center;
+  width: 100%;
+  max-width: 500px;
+  margin: 20px auto;
+  display: flex;
+}
+
+#search-input {
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  width: 100%;
+  padding: 12px 20px;
+  font-size: 16px;
+  transition: all .3s;
+  box-shadow: 0 2px 5px #0000001a;
+}
+
+#search-input:focus {
+  border-color: pink;
+  outline: none;
+  box-shadow: 0 0 5px #07f6;
+}
+
+.modal-backdropCommments {
+  z-index: 1000;
+  background-color: #00000080;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.hidden {
+  display: none;
+}
+
+.modalComments {
+  background-color: #fff;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  padding: 30px 25px;
+  overflow-y: auto;
+  box-shadow: 0 4px 12px #0003;
+}
+
+.modalComments h2 {
+  text-align: center;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.comments {
+  margin-bottom: 20px;
+  padding: 0;
+  list-style: none;
+}
+
+.comments li {
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+}
+
+#comments-post-form {
+  flex-direction: column;
+  gap: 10px;
+  display: flex;
+}
+
+#comments-post-form input {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  max-width: 500px;
+  padding: 10px;
+  font-size: 14px;
+}
+
+.post-comment-button {
+  color: #fff;
+  cursor: pointer;
+  background-color: pink;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 16px;
+  transition: background .3s;
+}
+
+.post-comment-button:hover {
+  background-color: green;
+}
+
+.close-comment-button {
+  color: #fff;
+  cursor: pointer;
+  background-color: gray;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.comment-card {
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+}
+
+.comment-card div {
+  overflow-wrap: break-word;
+  max-width: 300px;
+}
+/*# sourceMappingURL=mini-project-CRUD.4ee4707b.css.map */
