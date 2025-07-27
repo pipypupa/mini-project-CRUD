@@ -1,6 +1,6 @@
 export default async function addPost(post) {
   try {
-    return await fetch("", {
+    return await fetch("http://localhost:3000/bd", {
         method: "POST",
         body: JSON.stringify(post),
         headers: {

@@ -8,7 +8,7 @@
     "build": "parcel build src/index.html --no-cache --public-url /mini-project-crud",
     "deploy": "gh-pages -d dist",
     "predeploy": "npm run build",
-    "server": "npx json-server "
+    "server": "npx json-server bd.json"
   },
   "keywords": [],
   "author": "",

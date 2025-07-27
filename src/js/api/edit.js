@@ -1,7 +1,7 @@
 export default async function updatePost(postData, id) {
   try {
     const res = await fetch(
-      ``,
+      `http://localhost:3000/bd`,
       {
         method: "PUT",
         headers: {

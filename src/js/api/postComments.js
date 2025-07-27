@@ -5,7 +5,7 @@ export default async function postComment(
 ) {
   try {
     return await fetch(
-      ``,
+      `http://localhost:3000/bd`,
       {
         method: "PUT",
         headers: {
